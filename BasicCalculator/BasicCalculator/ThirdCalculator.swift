@@ -16,10 +16,10 @@ struct ThirdCalculator: View {
         ["1", "2", "3", "+"]
     ]
     
-    @State var OriginalCondition: String = ""
+//    @State var originalCondition: String = ""
     
-    var buttonColor: Color {
-        switch OriginalCondition {
+    func buttonColor(_ item: String) -> Color {
+        switch item {
         case "1", "2", "3", "4", "5", "6", "7", "8", "9":
             return Color(.darkGray)
         case "AC", "⁺∕₋", "%":
@@ -28,6 +28,8 @@ struct ThirdCalculator: View {
             return .orange
         }
     }
+    
+
     
     var body: some View {
         
@@ -62,7 +64,7 @@ struct ThirdCalculator: View {
                                         .frame(width: (UIScreen.main.bounds.width - 5 * 12) / 4,
                                                height: (UIScreen.main.bounds.width - (5 * 12)) / 4)
                                         .background(Circle()
-                                            .fill(buttonColor))
+                                            .fill(self.buttonColor(item)))
                                     
                                 }
                             }
