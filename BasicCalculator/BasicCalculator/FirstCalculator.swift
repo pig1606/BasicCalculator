@@ -51,12 +51,13 @@ enum Operation {
 
 struct FirstCalculator: View {
     
-    @EnvironmentObject var VarCollectionSheet : VarCollection
-    //varCollection에서 끌어오기
+    //varCollection에서 끌어오려면
+    //@EnvironmentObject var VarCollectionSheet : VarCollection
     
 
     @State var runningNumber = 0
     @State var currentOperation: Operation = .none
+    @State var value = "0"
     
     let buttons: [[CalcButton]] = [
         [.clear, .negative, .percent, .divide],
@@ -75,8 +76,10 @@ struct FirstCalculator: View {
                 // Text display
                 HStack {
                     Spacer()
-                    Text(VarCollectionSheet.value)
-                    //밸류 varCollectionSheet에서 끌어오기
+                    Text(value)
+                    //value varCollectionSheet에서 끌어오려면
+                    //Text(VarCollectionSheet.value)
+                    
                         .bold()
                         .font(.system(size: 100))
                         .foregroundColor(.white)
@@ -114,47 +117,47 @@ struct FirstCalculator: View {
         case .add, .subtract, .multiply, .divide, .equal:
             if button == .add {
                 self.currentOperation = .add
-                self.runningNumber = Int(VarCollectionSheet.value) ?? 0
+                self.runningNumber = Int(value) ?? 0
             }
             else if button == .subtract {
                 self.currentOperation = .subtract
-                self.runningNumber = Int(VarCollectionSheet.value) ?? 0
+                self.runningNumber = Int(value) ?? 0
             }
             else if button == .multiply {
                 self.currentOperation = .multiply
-                self.runningNumber = Int(VarCollectionSheet.value) ?? 0
+                self.runningNumber = Int(value) ?? 0
             }
             else if button == .divide {
                 self.currentOperation = .divide
-                self.runningNumber = Int(VarCollectionSheet.value) ?? 0
+                self.runningNumber = Int(value) ?? 0
             }
             else if button == .equal {
                 let runningValue = self.runningNumber
-                let currentValue = Int(VarCollectionSheet.value) ?? 0
+                let currentValue = Int(value) ?? 0
                 switch self.currentOperation {
-                case .add: VarCollectionSheet.value = "\(runningValue + currentValue)"
-                case .subtract: VarCollectionSheet.value = "\(runningValue - currentValue)"
-                case .multiply: VarCollectionSheet.value = "\(runningValue * currentValue)"
-                case .divide: VarCollectionSheet.value = "\(runningValue / currentValue)"
+                case .add: value = "\(runningValue + currentValue)"
+                case .subtract: value = "\(runningValue - currentValue)"
+                case .multiply: value = "\(runningValue * currentValue)"
+                case .divide: value = "\(runningValue / currentValue)"
                 case .none:
                     break
                 }
             }
             
             if button != .equal {
-                VarCollectionSheet.value = "0"
+                value = "0"
             }
         case .clear:
-            VarCollectionSheet.value = "0"
+            value = "0"
         case .decimal, .negative, .percent:
             break
         default:
             let number = button.rawValue
-            if VarCollectionSheet.value == "0" {
-                VarCollectionSheet.value = number
+            if value == "0" {
+                value = number
             }
             else {
-                VarCollectionSheet.value = "\(VarCollectionSheet.value)\(number)"
+                value = "\(value)\(number)"
             }
         }
         
