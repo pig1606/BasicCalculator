@@ -11,7 +11,6 @@ import SwiftUI
 // You can treat this as the Global Application State
 
 class GlobalEnvironment: ObservableObject {
-    
     @Published var display = ""
 }
 

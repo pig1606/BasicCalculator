@@ -160,7 +160,6 @@ struct FirstCalculator: View {
                 value = "\(value)\(number)"
             }
         }
-        
     }
     
     func buttonWidth(item: CalcButton) -> CGFloat {

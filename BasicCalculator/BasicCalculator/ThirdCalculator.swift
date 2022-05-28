@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ThirdCalculator: View {
     
-    let button = [
+    let button: [[String]] = [
         ["AC", "⁺∕₋", "%", "÷"],
         ["7", "8", "9", "×"],
         ["4", "5", "6", "−"],
@@ -69,43 +69,10 @@ struct ThirdCalculator: View {
                     
                     HStack{
                         
-                        Button(action: {
-
-                        }){
-                            Text("0")
-                                .font(.system(size: 40))
-                                .foregroundColor(.white)
-                                .padding(.leading, 30)
-                                .frame(width: (UIScreen.main.bounds.width - 4 * 12) / 4 * 2,
-                                       height: (UIScreen.main.bounds.width - (5 * 12)) / 4,
-                                       alignment: .leading)
-                                .background(Capsule()
-                                    .fill(Color(UIColor.darkGray)))
-                        }
+                        CustomButton(num: "0", ratio: 2, edges: .leading, length: 30, alignment: .leading)
+                        CustomButton(num: ".")
+                        CustomButton(num: "=", color: Color.orange)
                         
-                        Button(action: {
-
-                        }){
-                            Text(".")
-                                .font(.system(size: 40))
-                                .foregroundColor(.white)
-                                .frame(width: (UIScreen.main.bounds.width - 5 * 12) / 4,
-                                       height: (UIScreen.main.bounds.width - (5 * 12)) / 4)
-                                .background(Circle()
-                                    .fill(Color(UIColor.darkGray)))
-                        }
-                        
-                        Button(action: {
-
-                        }){
-                            Text("=")
-                                .font(.system(size: 40))
-                                .foregroundColor(.white)
-                                .frame(width: (UIScreen.main.bounds.width - 5 * 12) / 4,
-                                       height: (UIScreen.main.bounds.width - (5 * 12)) / 4)
-                                .background(Circle()
-                                    .fill(Color.orange))
-                        }
                     }
                 }
             }
@@ -118,5 +85,40 @@ struct ThirdCalculator: View {
 struct ThirdCalculator_Previews: PreviewProvider {
     static var previews: some View {
         ThirdCalculator()
+    }
+}
+
+struct CustomButton: View {
+   
+    let num: String
+    let ratio: CGFloat
+    let edges: Edge.Set
+    let length: CGFloat?
+    let alignment: Alignment
+    let color: Color
+    
+    init(num: String, ratio: CGFloat = 1, edges: Edge.Set = .all, length: CGFloat? = nil, alignment: Alignment = .center, color: Color = Color(UIColor.darkGray)) {
+        self.num = num
+        self.ratio = ratio
+        self.edges = edges
+        self.length = length
+        self.alignment = alignment
+        self.color = color
+    }
+    
+    var body: some View {
+        Button(action: {
+            
+        }){
+            Text(num)
+                .font(.system(size: 40))
+                .foregroundColor(.white)
+                .padding(edges, length)
+                .frame(width: (UIScreen.main.bounds.width - 4 * 12) / 4 * ratio,
+                       height: (UIScreen.main.bounds.width - (5 * 12)) / 4,
+                       alignment: alignment)
+                .background(Capsule()
+                    .fill(color))
+        }
     }
 }
