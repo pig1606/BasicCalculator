@@ -1,13 +1,24 @@
 //
-//  ThirdCalculator.swift
+//  FourthCalculator.swift
 //  BasicCalculator
 //
-//  Created by Minyoung Kim on 2022/05/25.
+//  Created by Minyoung Kim on 2022/05/27.
 //
 
 import SwiftUI
 
-struct ThirdCalculator: View {
+// Env object
+// You can treat this as the Global Application State
+
+class GlobalEnvironment: ObservableObject {
+    
+    @Published var display = ""
+}
+
+
+struct FourthCalculator: View {
+    
+    @EnvironmentObject var env: GlobalEnvironment
     
     let button = [
         ["AC", "⁺∕₋", "%", "÷"],
@@ -38,7 +49,7 @@ struct ThirdCalculator: View {
                 // Result of Calculation
                 HStack{
                     Spacer()
-                    Text("228")
+                    Text(env.display)
                         .font(.system(size: 85))
                         .foregroundColor(.white)
                     
@@ -51,7 +62,7 @@ struct ThirdCalculator: View {
                         HStack {
                             ForEach(row, id: \.self) { item in
                                 Button(action: {
-
+                                    self.env.display += item
                                 }){
                                     
                                     Text(item)
@@ -70,7 +81,7 @@ struct ThirdCalculator: View {
                     HStack{
                         
                         Button(action: {
-
+                            self.env.display += "0"
                         }){
                             Text("0")
                                 .font(.system(size: 40))
@@ -84,7 +95,7 @@ struct ThirdCalculator: View {
                         }
                         
                         Button(action: {
-
+                            self.env.display += "."
                         }){
                             Text(".")
                                 .font(.system(size: 40))
@@ -96,7 +107,7 @@ struct ThirdCalculator: View {
                         }
                         
                         Button(action: {
-
+                            self.env.display += "="
                         }){
                             Text("=")
                                 .font(.system(size: 40))
@@ -115,8 +126,9 @@ struct ThirdCalculator: View {
 
 
 
-struct ThirdCalculator_Previews: PreviewProvider {
+struct FourthCalculator_Previews: PreviewProvider {
     static var previews: some View {
-        ThirdCalculator()
+        FourthCalculator().environmentObject(GlobalEnvironment())
     }
 }
+
