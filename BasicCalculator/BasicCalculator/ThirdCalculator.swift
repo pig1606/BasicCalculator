@@ -36,6 +36,7 @@ struct ThirdCalculator: View {
                 Spacer()
                 
                 // Result of Calculation
+                
                 HStack{
                     Spacer()
                     Text("228")

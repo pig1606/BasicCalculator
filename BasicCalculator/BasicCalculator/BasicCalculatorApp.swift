@@ -10,11 +10,10 @@ import SwiftUI
 @main
 struct BasicCalculatorApp: App {
     
-    @StateObject private var MemoData = VarCollection()
     
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(MemoData)
+            ContentView()
         }
     }
 }
