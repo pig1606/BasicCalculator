@@ -10,6 +10,13 @@
 
 import SwiftUI
 
+extension Double {
+    func roundTo(places: Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}
+
 enum CalcButton: String {
     
     case one = "1"
@@ -54,8 +61,82 @@ enum CalcButton: String {
     }
 }
 
+class GlobalEnvironment: ObservableObject {
+    
+    @Published var display = "0"
+    
+    private var isFinishedTypingNumber: Bool = true
+    private var lastInput: CalcButton?
+    
+    private var displayValue: Double {
+        get {
+            guard let number = Double(self.display) else { fatalError("Cannot convert display label text to a Double") }
+            return number
+        }
+        set {
+            self.display = newValue.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", newValue) : String(newValue)
+        }
+    }
+
+    private var calculator = CalculatorLogic()
+    
+    private func isLastInputOperator() -> Bool {
+        guard let lastInput = lastInput else { return false }
+            return lastInput == .divide || lastInput == .multiply || lastInput == .plus || lastInput == .minus
+    }
+    
+    func receiveInput(calculatorButton: CalcButton) {
+
+        switch calculatorButton {
+        case .clear, .negative, .percent, .divide, .multiply, .minus, .plus, .equal:
+            
+            // check for two consecutive operators
+            if isLastInputOperator() { break }
+            
+            isFinishedTypingNumber = true
+            
+            calculator.setNumber(displayValue)
+
+            if let result = calculator.calculate(symbol: calculatorButton) {
+                displayValue = result
+            }
+            
+        default:
+            
+            if isFinishedTypingNumber {
+                
+                // do not duplicate zeros
+                if displayValue == 0 && calculatorButton == .zero { return }
+                
+                if calculatorButton == .decimal {
+                    self.display = "0" + calculatorButton.rawValue
+                } else { self.display = calculatorButton.rawValue }
+                
+                isFinishedTypingNumber = false
+                
+            } else {
+                
+                if calculatorButton == .decimal {
+                    
+                    // check if number is whole number
+                    if self.display.contains(".") { return }
+
+                    // check if number already has a decimal
+                    let isInt = floor(displayValue) == displayValue
+                    if !isInt { return }
+                }
+                self.display = self.display + calculatorButton.rawValue
+            }
+        }
+        lastInput = calculatorButton
+    }
+}
+
 
 struct FirstCalculator: View {
+    
+    var button: CalcButton
+    @EnvironmentObject var env: GlobalEnvironment
     
     
     let buttons: [[CalcButton]] = [
@@ -76,7 +157,7 @@ struct FirstCalculator: View {
                 // 계산 결과
                 HStack {
                     Spacer()
-                    Text("228")
+                    Text(env.display)
                         .font(.system(size: 85))
                         .foregroundColor(.white)
                 }
@@ -88,7 +169,7 @@ struct FirstCalculator: View {
                     HStack(spacing: 12){
                         ForEach(row, id: \.self) { item in
                             Button(action: {
-                                
+                                self.env.receiveInput(calculatorButton: self.button)
                             }, label: {
                                 Text(item.rawValue)
                                     .font(.system(size: 40))
@@ -142,6 +223,6 @@ struct FirstCalculator: View {
 
 struct FirstCalculator_Previews: PreviewProvider {
     static var previews: some View {
-        FirstCalculator()
+        FirstCalculator(button: CalcButton).environmentObject(GlobalEnvironment())
     }
 }
