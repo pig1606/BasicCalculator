@@ -10,7 +10,6 @@ import SwiftUI
 struct CalculatorLogic {
     
     private var number: Double?
-    
     private var previousValue: Double?
     private var currentNumber: Double?
     private var activeOperation: CalcButton?

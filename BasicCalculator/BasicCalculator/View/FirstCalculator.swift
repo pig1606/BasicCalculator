@@ -135,7 +135,6 @@ class GlobalEnvironment: ObservableObject {
 
 struct FirstCalculator: View {
     
-    var button: CalcButton
     @EnvironmentObject var env: GlobalEnvironment
     
     
@@ -169,7 +168,7 @@ struct FirstCalculator: View {
                     HStack(spacing: 12){
                         ForEach(row, id: \.self) { item in
                             Button(action: {
-                                self.env.receiveInput(calculatorButton: self.button)
+                                self.env.receiveInput(calculatorButton: item)
                             }, label: {
                                 Text(item.rawValue)
                                     .font(.system(size: 40))
@@ -223,6 +222,6 @@ struct FirstCalculator: View {
 
 struct FirstCalculator_Previews: PreviewProvider {
     static var previews: some View {
-        FirstCalculator(button: CalcButton).environmentObject(GlobalEnvironment())
+        FirstCalculator().environmentObject(GlobalEnvironment())
     }
 }
